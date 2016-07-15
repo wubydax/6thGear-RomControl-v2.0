@@ -32,7 +32,6 @@ public class OpenAppPreference extends Preference {
     private ResolveInfo mResolveInfo;
     private Context mContext;
     private Intent mIntent;
-    private boolean mIsInstalled;
 
 
     public OpenAppPreference(Context context, AttributeSet attrs) {
@@ -75,7 +74,7 @@ public class OpenAppPreference extends Preference {
     @Override
     protected void onClick() {
         super.onClick();
-        if (mIsInstalled) {
+        if (mResolveInfo != null) {
             mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mContext.startActivity(mIntent);
         }
