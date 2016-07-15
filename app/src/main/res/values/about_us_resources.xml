@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--/*      Created by Roberto Mariani and Anna Berkovitch, 2015-2016
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with this program.  If not, see <http://www.gnu.org/licenses/>.*/-->
+<resources>
+
+
+    <!--Contact info arrays-->
+
+    <!--In this array you will put the icons for contact information,
+    for example xda icon for your xda thread, site icon for your site, facebook icon and so on-->
+    <array name="about_contact_us_drawables">
+        <item>@drawable/icon_2</item>
+        <item>@drawable/icon_1</item>
+        <item>@drawable/icon_3</item>
+    </array>
+
+    <!--In this array you will put the titles for your contact info items. Keep the order consistent between all 3 arrays-->
+    <string-array name="about_contact_us_text">
+        <item>Facebook</item>
+        <item>Our Site</item>
+        <item>XDA</item>
+    </string-array>
+
+    <!--In this array you will put the titles for the URL strings that will open once a user clicked on the item-->
+    <string-array name="about_contact_us_links" translatable="false">
+        <item>https://www.facebook.com/</item>
+        <item>https://www.google.com/</item>
+        <item>http://forum.xda-developers.com/</item>
+    </string-array>
+
+
+
+    <!--Team info arrays-->
+    <array name="about_team_drawables">
+        <item>@drawable/icon_5</item>
+        <item>@drawable/icon_6</item>
+        <item>@drawable/icon_1</item>
+    </array>
+    <string-array name="about_team_names">
+        <item>Master Yoda - wise and talented lead developer</item>
+        <item>Luke Skywalker - one handed theme master</item>
+        <item>Darth Vader - dark theme master</item>
+    </string-array>
+    <string-array name="about_team_links" translatable="false">
+        <item>https://www.facebook.com/</item>
+        <item>https://www.google.com/</item>
+        <item>http://forum.xda-developers.com/</item>
+    </string-array>
+
+
+
+    <!--Credits and thanks info arrays-->
+    <array name="about_credits_drawables">
+        <item>@drawable/icon_1</item>
+        <item>@drawable/icon_3</item>
+        <item>@drawable/icon_4</item>
+        <item>@drawable/icon_2</item>
+        <item>@drawable/icon_6</item>
+        <item>@drawable/icon_5</item>
+    </array>
+    <string-array name="about_credits_names">
+        <item>Star Trek - for being ultimately better than Star Wars</item>
+        <item>Jean-Luc Picard - for making us crave hot earl-grey tea even in the middle of the summer</item>
+        <item>Data - for running on the best rom. Google, we still are waiting for THAT android version</item>
+        <item>Janeway - for being a normal person and drinking black coffee</item>
+        <item>Q - for reminding us that you can live forever and still look great</item>
+        <item>Worf - for teaching us to love Klingons. It was NOT easy</item>
+    </string-array>
+    <string-array name="about_credits_links" translatable="false">
+        <item>https://www.facebook.com/</item>
+        <item>https://www.google.com/</item>
+        <item>http://forum.xda-developers.com/</item>
+        <item>https://www.facebook.com/</item>
+        <item>https://www.google.com/</item>
+        <item>http://forum.xda-developers.com/</item>
+    </string-array>
+</resources>

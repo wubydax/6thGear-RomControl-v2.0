@@ -1,0 +1,67 @@
+<!--/*      Created by Roberto Mariani and Anna Berkovitch, 2015-2016-->
+    <!--This program is free software: you can redistribute it and/or modify-->
+    <!--it under the terms of the GNU General Public License as published by-->
+    <!--the Free Software Foundation, either version 3 of the License, or-->
+    <!--(at your option) any later version.-->
+
+    <!--This program is distributed in the hope that it will be useful,-->
+    <!--but WITHOUT ANY WARRANTY; without even the implied warranty of-->
+    <!--MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the-->
+    <!--GNU General Public License for more details.-->
+
+    <!--You should have received a copy of the GNU General Public License-->
+    <!--along with this program.  If not, see <http://www.gnu.org/licenses/>.*/-->
+<resources>
+    <string name="app_name">Rom Control</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="dialog_color_picker">Pick Color</string>
+    <string name="press_color_to_apply">Press to apply</string>
+    <string name="root_progress_dialog_title">Acquiring Root Access</string>
+    <string name="root_progress_dialog_message">Please wait…</string>
+    <string name="no_su_dialog_title">No root privileges</string>
+    <string name="no_su_dialog_message">We could not acquire root access on your device.\n\nMost of this app\'s functions can be performed without root access. However, you might experience problems with running scripts or rebooting.\n\nWe strongly recommend to allow root access on next request or allow such access in your Su client manually.</string>
+    <string name="no_su_dialog_dismiss_button_text">Whatever, man</string>
+    <string name="command_executed_success_toast">Executed successfully</string>
+    <string name="root_tools_exception_toast">File not found or root denied</string>
+    <string name="reboot_menu">Reboot menu</string>
+    <string name="reboot_device_text">Reboot Device</string>
+    <string name="reboot_recovery_text">Reboot Recovery</string>
+    <string name="reboot_ui_text">Reboot SystemUI</string>
+    <string name="app_reboot_required_dialog_title">App reboot required</string>
+    <string name="app_reboot_required_dialog_message">For this action to take effect it is required to restart %1$s.\n\nPress OK to restart now</string>
+    <string name="theme_dialog_title">Choose theme</string>
+    <string name="changelog_version_title">ROM version: %1$s</string>
+    <string name="backup_restore_dialog_title">Backup/Restore Rom Control system data</string>
+    <string name="choose_backup_dialog_title">Please choose backup to restore</string>
+    <string name="no_backup_dialog_title">No backup found on this device</string>
+    <string name="no_backup_dialog_message">Would you like to create new backup now?</string>
+    <string name="restore_confirm_dialog_title">Please confirm restore</string>
+    <string name="restore_confirm_message">You have chosen to restore data from previous Rom Control preferences.\n\n<b>Please note! This operation will change your device settings based on the settings stored in this file.\n\n<font fgcolor="red">DO NOT PROCEED unless absolutely sure!!!</font></b>\n\nRom Control will close to allow data restoration and reopen again upon its completion. Depending on the amount of your settings this may take some time.\n\nPlease click \"CONFIRM\" to proceed or \"CANCEL\" to quit.</string>
+    <string name="backup_complete_toast">Backup completed successfully. The backup file can be found at\n%1$s</string>
+    <string name="backup_file_prefix_date_format" translatable="false">dd-MM-yy_HH:mm</string>
+    <string name="backup_file_suffix" translatable="false">_RCBackup</string>
+    <string name="restore_complete_toast">Restore complete</string>
+    <string name="systemui_prefs">SystemUI prefs</string>
+    <string name="phone_prefs">Phone prefs</string>
+    <string name="framework_prefs">Framework prefs</string>
+    <string name="notification_panel_prefs">Notification panel prefs</string>
+    <string name="more_options">More options</string>
+    <string name="set_theme">Set theme</string>
+    <string name="backup_and_restore"><![CDATA[Backup & Restore]]></string>
+    <string name="changelog">Changelog</string>
+    <string name="about_us">About us</string>
+    <string name="confirm_script_dialog_message">"Are you sure you want to run %1$s?"</string>
+    <string name="run_script_confirm_dialog_title">Confirmation required</string>
+    <string name="run_script_confirm_dialog_positive_button">Yes, run</string>
+    <string name="find_app">Find App</string>
+    <string name="reboot_required_dialog_title">Device reboot required</string>
+    <string name="reboot_required_dialog_message">For this action to take effect, full device reboot is required. Would you like to reboot now?</string>
+    <string name="reboot_later_negative_button">later</string>
+    <string name="reboot_now_dialog_button">reboot now</string>
+    <string name="imminent_reboot_warning">Your device will reboot IMMEDIATELY upon script completion!!!</string>
+
+    <!--These strings are to set the default fragment to open for the first time the app launches-->
+</resources>

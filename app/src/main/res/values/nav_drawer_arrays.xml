@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--/*      Created by Roberto Mariani and Anna Berkovitch, 2015-2016
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with this program.  If not, see <http://www.gnu.org/licenses/>.*/-->
+<resources>
+    <!--The following array is for icons you want to use for your items
+    You can create new icons bu right clicking the drawable folder and choosing
+    New vector drawable
+    You have a great selection of items in xml vector format.
+    Those are supported starting lollipop.
+    YOU SHOULD NOT USE PNG. not even material one. Vectors will work best with any device density.
+
+    Once you have created the vector, reference it as regular drawable in the array below.
+
+    MAKE SURE THE ITEMS IN ALL 3 ARRAYS CORRESPOND IN ORDER AND ALL 3 ARRAYS ARE SAME LENGTH-->
+    <array name="nav_menu_prefs_drawables">
+        <item>@drawable/ic_system_ui</item>
+        <item>@drawable/ic_phone</item>
+        <item>@drawable/ic_framework</item>
+        <item>@drawable/ic_notification_panel</item>
+    </array>
+
+
+    <!--This array is for your items titles.
+    Use @string reference, so later on your app can be translated with ease
+    KEEP THE ORDER BETWEEN ALL YOUR ARRAYS-->
+    <string-array name="nav_menu_prefs_titles">
+        <item>@string/systemui_prefs</item>
+        <item>@string/phone_prefs</item>
+        <item>@string/framework_prefs</item>
+        <item>@string/notification_panel_prefs</item>
+    </string-array>
+
+
+    <!--This array is the most valuable one
+
+    Here you put the file names of the preference files you create in your xml directory
+    THEY MUST BE PRECISE AND CASE SENSITIVE!!! DO NOT ADD .xml SUFFIX-->
+    <string-array name="nav_menu_xml_file_names" translatable="false">
+        <item>ui_prefs</item>
+        <item>phone_prefs</item>
+        <item>framework_prefs</item>
+        <item>notification_panel_prefs</item>
+    </string-array>
+</resources>

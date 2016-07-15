@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--/*      Created by Roberto Mariani and Anna Berkovitch, 2015-2016
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with this program.  If not, see <http://www.gnu.org/licenses/>.*/-->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="Statusbar Clock layout">
+        <com.wubydax.romcontrol.v2.prefs.OpenAppPreference
+            android:icon="@drawable/potatoclock"
+            android:title="Potato Clock"
+            app:componentName="com.potato.clock.main/com.potato.clock.main.Main" />
+
+    </PreferenceCategory>
+
+    <!--Following category shows variety of two state preferences-->
+    <PreferenceCategory
+        android:title="Two stated preferences test category">
+
+        <!--Normal Switch preference-->
+        <com.wubydax.romcontrol.v2.prefs.MySwitchPreference
+            android:defaultValue="true"
+            android:key="normal_test_switch"
+            android:summaryOff="Disabled"
+            android:summaryOn="Enabled"
+            android:title="Normal test switch"/>
+
+        <!--Switch preference which will throw a dialog that app reboot is required-->
+        <com.wubydax.romcontrol.v2.prefs.MySwitchPreference
+            android:defaultValue="true"
+            android:key="kill_app_with_dialog_test_switch"
+            android:summaryOff="Disabled"
+            android:summaryOn="Enabled"
+            android:title="Kill app with dialog switch"
+            app:isSilent="false"
+            app:packageNameToKill="com.android.systemui"/>
+
+        <!--Switch preference which will in ADDITION to actual work, also silently restart app with given package-->
+        <!--Note, that isSilent attribute is by default TRUE. So you don't need to specify it if you want silent app restart-->
+        <com.wubydax.romcontrol.v2.prefs.MySwitchPreference
+            android:defaultValue="true"
+            android:key="kill_app_silently_test_switch"
+            android:summaryOff="Disabled"
+            android:summaryOn="Enabled"
+            android:title="Kill app silently test switch"
+            app:packageNameToKill="com.android.contacts"/>
+
+        <!--Switch preference which will throw a dialog that following it's action device reboot is required-->
+        <!--Please note, even if you specify the need to kill app, once the rebootDevice attribute is TRUE, kill app attributes are ignored-->
+        <com.wubydax.romcontrol.v2.prefs.MySwitchPreference
+            android:defaultValue="true"
+            android:key="reboot_required_test_switch"
+            android:summaryOff="Disabled"
+            android:summaryOn="Enabled"
+            android:title="Switch reminding of need to reboot"
+            app:rebootDevice="true"/>
+
+        <!--We can use kill app on checkboxes as well. Same goes for rebootDevice-->
+        <com.wubydax.romcontrol.v2.prefs.MyCheckBoxPreference
+            android:defaultValue="true"
+            android:key="test_checkbox_with_kill_app"
+            android:summaryOff="Disabled"
+            android:summaryOn="Enabled"
+            android:title="Kill app checkbox"
+            app:isSilent="false"
+            app:packageNameToKill="com.android.systemui"/>
+    </PreferenceCategory>
+
+
+    <!--The following category demonstrates various ways of using ColorPickerPreference-->
+    <PreferenceCategory
+        android:title="Color pickers test category">
+
+        <!--Normal color picker preference-->
+        <!--Please note, the hexValue and the alpha are there by default now. If you want to cancel them, you need to specify false-->
+        <com.wubydax.romcontrol.v2.prefs.ColorPickerPreference
+            android:defaultValue="#ffccdd"
+            android:key="test_color_preference"
+            android:title="Normal test color picker"/>
+
+        <!--Color picker preference without the alpha slider and without the hex value
+        You can set false to both or one of them-->
+        <com.wubydax.romcontrol.v2.prefs.ColorPickerPreference
+            alphaSlider="false"
+            hexValue="false"
+            android:defaultValue="#ffffff"
+            android:key="no_alpha_color_key"
+            android:title="Color picker with no alpha or hex"/>
+
+        <!--Color picker preference with kill app option
+        Note, you can also use rebootDevice attribute, like with two stated preferences-->
+        <com.wubydax.romcontrol.v2.prefs.ColorPickerPreference
+            android:key="app_kill_color_key"
+            android:title="Color picker with app kill"
+            app:isSilent="false"
+            app:packageNameToKill="com.android.systemui"/>
+    </PreferenceCategory>
+
+    <!--The following category demonstrates how to use slider (SeekBarPreference)-->
+    <PreferenceCategory
+        android:title="Seekbar preferences (slider preferences)">
+
+
+        <!--Normal seekbar preference. No max or min value defined. By default max is 100 and min is 0. Default is 50.
+        By default unit value is "" - empty string. If you don't specify, the preference only shows numbers
+        Unit value has no bearing on the preference value. The value is an integer alone-->
+        <com.wubydax.romcontrol.v2.prefs.MySeekBarPreference
+            android:key="normal_slider_key"
+            android:title="Normal slider - no values set"/>
+
+        <!--Slider with adjacent defined values, note the values will be displayed as percent (%)
+        it is also dependent on checkbox preference from previous category-->
+        <com.wubydax.romcontrol.v2.prefs.MySeekBarPreference
+            android:defaultValue="65"
+            android:dependency="test_checkbox_with_kill_app"
+            android:key="predefined_slider_key"
+            android:title="Slider with predefined values"
+            app:maxValue="100"
+            app:minValue="58"
+            app:unitsValue="%"/>
+
+        <!--We can use kill app or reboot device attributes on slider preference as well-->
+        <com.wubydax.romcontrol.v2.prefs.MySeekBarPreference
+            android:defaultValue="255"
+            android:key="slider_with_reboot_dialog"
+            android:title="Slider with reboot dialog"
+            app:maxValue="255"
+            app:rebootDevice="true"/>
+
+    </PreferenceCategory>
+
+    <!--The following category demonstrates the use of various dialog preferences-->
+    <PreferenceCategory
+        android:title="Dialog and List preferences">
+
+        <!--Example of simple list preference with radio button items
+        You absolutely HAVE to set dafaultValue and it has to be one of your entryValues string arrays
+        You can use any of the following with kill app attributes or rebootDevice attribute
+
+        Note, that you can now use dependency on list preference.
+        Custom attribute app:dependentValue will allow you to decide which list item, if selected,
+        will set dependent preferences disabled.-->
+        <com.wubydax.romcontrol.v2.prefs.MyListPreference
+            android:defaultValue="20"
+            android:entries="@array/test_list_entries"
+            android:entryValues="@array/test_list_values"
+            android:key="test_list_key"
+            app:dependentValue="1"
+            android:title="Choose items from the list preference"/>
+
+        <!--Edit text preference is a dialog preference that allows you to enter custom text-->
+        <com.wubydax.romcontrol.v2.prefs.MyEditTextPreference
+            android:defaultValue="test"
+            android:key="test_edit_text_key"
+            android:title="Input custom text"
+            android:dependency="test_list_key"/>
+
+
+        <!--Thumbnail list preference is a special kind of preference which allows you to show preview of the selected image
+        This can be useful f.e. for setting custom bg to toggles in systemui
+        Needless to say you need to put the same images you put in systemui in Rom Control in drawables
+        And you need to create 3 kinds of arrays in arrays.xml file. 2 string arrays for entryList and entryValuesList and one simple array
+        for drawable references. You can see the arrays for the following preferences inside arrays.xml
+        You have to set default and the default has to be one of entryValuesList strings-->
+
+        <!--Example of simple Thumbnail preference with no additional attributes-->
+        <com.wubydax.romcontrol.v2.prefs.ThumbnailListPreference
+            android:defaultValue="1"
+            android:key="test_thumbnail_key"
+            android:title="Simple thumbnail preference"
+            app:drawableArray="@array/thumbnail_drawables"
+            app:entryList="@array/thumbnail_items"
+            app:entryValuesList="@array/thumbnail_values"
+            app:dependentValue="2"/>
+
+        <!--Example of Thumbnail preference which calls to kill app upon selected item-->
+        <com.wubydax.romcontrol.v2.prefs.ThumbnailListPreference
+            android:defaultValue="2"
+            android:key="test_thumbnail_kill_app"
+            android:title="Kill app thumbnail preference"
+            android:dependency="test_thumbnail_key"
+            app:drawableArray="@array/thumbnail_drawables"
+            app:entryList="@array/thumbnail_items"
+            app:entryValuesList="@array/thumbnail_values"
+            app:isSilent="false"
+            app:packageNameToKill="com.android.systemui"/>
+
+
+        <!--The following preference is a special preference that's called IntentDialogPreference
+        This preference allows you to choose an app from the list. it also conveniently includes search field
+        This preference writes into database what's called component name for specific system needs.
+        When we want to call an app in android, we need to provide some information as to which app we want to launch
+        and which activity inside that app we want to lunch.
+        Launching app by combination of those is called explicit intent. Explicit intent needs 2 things to run an app:
+        1. Package name
+        2. Activity or service name
+
+        This preference is most useful for launching an specific app based on info you can fetch from database
+        For example on double click on home key
+
+        Intent dialog preference puts the info for explicit intent in a string. First package name, then separator, then activity name
+
+        You can use any separator you want. The default separator is "##"
+        But as you can see in following example we set the separator to be forward slash "/"
+        The separator depends on how you build the mod in smali for your needs.
+
+        Any kill app or reboot device attributes are applicable here as well-->
+
+
+        <!--This specific IntentDialogPreference has defaultValue set to Settings app.
+        You DO NOT need to set default. Only if you want to. But it is in most cases not necessary and even not that good.
+        This is just an example. When you run this, you will see that the preference has an icon of the chosen app on the right
+        and a name of the app set as summary. When you choose a new app, those things change-->
+        <com.wubydax.romcontrol.v2.prefs.IntentDialogPreference
+            android:defaultValue="com.android.settings/com.android.settings.Settings"
+            android:key="test_intent_with default"
+            android:title="Select Test App with default"
+            app:intentSeparator="/"/>
+
+        <!--This IntentDialogPreference comes with no default and no separator. So default separator will be applied "##"
+        and it also has no search showing-->
+        <com.wubydax.romcontrol.v2.prefs.IntentDialogPreference
+            android:key="test_intent_without default"
+            android:title="Select app, no default, no search, ## separator"
+            app:showSearch="false"/>
+
+        <!--This preference will prompt to reboot device upon selection
+        This is useful if f.e. you use it to set default app to open when home button is double clicked
+        Reboot is advised but not necessary immediately. So user will be shown a dialog to let them know they need to reboot
+        And they can reboot immediately or later-->
+        <com.wubydax.romcontrol.v2.prefs.IntentDialogPreference
+            android:key="test_intent_without_default"
+            android:title="Select app and reboot device"
+            app:intentSeparator="/"
+            app:rebootDevice="true"
+            app:showSearch="true"/>
+    </PreferenceCategory>
+
+
+    <!--In the following category we will demonstrate some of our very special preference fo various needs you might have-->
+    <PreferenceCategory
+        android:title="Special preferences"/>
+
+
+    <PreferenceCategory
+        android:title="Select image preferences">
+        <!--Select image preferences allow the user to select any image from the gallery.
+        The uri for that image will be written into the database
+        Android can fetch images based on their uri (universal resource identifier).
+        A type of uri that you all know is called URL, which is a web address.
+        Uri for database is the "address" of an item inside the database.
+        In android we have Media database, which hosts info about media items. In our case we are interested in images.
+
+        Upon clicking this preference a Gallery will launch, upon selecting image, it's uri will be written into database.
+        In your mods you can fetch the string, convert it to Uri and set that image as background to anything you want.
+        We use this method for setting custom image in our mod for background to notification panel-->
+
+
+        <!--Those are examples of simple uri selection preference. The icon for them will be the selected image preview
+        You need to set title and key. That's it.-->
+        <com.wubydax.romcontrol.v2.prefs.UriSelectionPreference
+            android:key="test_image_selection_key_2"
+            android:title="Select Image 2"/>
+        <com.wubydax.romcontrol.v2.prefs.UriSelectionPreference
+            android:key="test_image_selection_key"
+            android:title="Select Image"/>
+        <com.wubydax.romcontrol.v2.prefs.UriSelectionPreference
+            android:key="test_image_selection_key_3"
+            android:title="Select Image 3"/>
+        <com.wubydax.romcontrol.v2.prefs.UriSelectionPreference
+            android:key="test_image_selection_key_4"
+            android:title="Select Image 4"/>
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:title="File preferences">
+        <!--File preference is a very special kind of preference, which works like switch but has different output.
+        Normal switch preference, like any two state preference, write boolean true/false into preferences.
+        In our app it also writes 1/0 into database.
+
+        File preference doesn't write into database. If it is switched on, it creates a file in our app directory in data.
+        That name of that file is what you set as key.
+
+        This is widely used by @tdunham for global boolean needs in systemui.
+        Please refer to his guide about setting global boolean to see appropriate smali application for this preference.
+
+        This is most useful for mods in smali files where you do not have context access to get content resolver.
+        Because File class is native java class and checking for it's existence does not require android context.
+
+        File preferences can have attribute to kill app or reboot device.-->
+
+
+        <!--This is a simple file preference. Note that once it's switched on, a file with the name identical to key is created in
+        /data/data/com.wubydax.romcontrol/files
+        When it's switched off the file is deleted.-->
+        <com.wubydax.romcontrol.v2.prefs.FilePreference
+            android:key="new_file"
+            android:summaryOff="Disabled"
+            android:summaryOn="Enabled"
+            android:title="New file preference"/>
+
+
+        <!--This file preferences upon change will prompt to kill app-->
+        <com.wubydax.romcontrol.v2.prefs.FilePreference
+            android:key="another_file"
+            android:summaryOff="Disabled"
+            android:summaryOn="Enabled"
+            android:title="Kill app file preference"
+            app:isSilent="false"
+            app:packageNameToKill="com.android.systemui"/>
+    </PreferenceCategory>
+
+
+
+
+    <!--The following category shows usage of  special preference we use to open an app based on component info
+    All you need to provide for this preference is package name and activity name separated by forward slash "/" like shown below
+    We will split the component info into components and check if the app is installed
+    if it's installed, we will show the app icon as preference icon and app name as title
+
+    If the app is not installed the preference is automatically removed from the list.
+
+    You can set your own summary to explain about the app.
+
+    If you wish to show a custom icon for that app shortcut or have custom title,
+    if you wish to use custom icon or custom title, like you would do normally with preference,
+    You are free to use android:title and android:icon attributes.
+    Our class will then use the items you chose instead of the application title and icon.
+
+    This WILL NOT affect the intent for opening application. It's a cosmetic measure for your convenience.-->
+    <PreferenceCategory
+        android:title="Shortcut to apps preferences">
+
+        <!--Example of simple app shortcuts. If those apps are not installed, the preferences will not show-->
+        <com.wubydax.romcontrol.v2.prefs.OpenAppPreference
+            android:summary="Application to browse your files, including root files"
+            app:componentName="com.speedsoftware.rootexplorer/com.speedsoftware.rootexplorer.RootExplorer"/>
+
+        <com.wubydax.romcontrol.v2.prefs.OpenAppPreference
+            android:summary="Control samsung's toolbox, turn it on or off, choose available apps and rearrange them"
+            app:componentName="com.wubydax.toolboxsettings/com.wubydax.toolboxsettings.ToolboxSettings"/>
+
+        <!--Example of OpenAppPreference with custom title and icon-->
+        <com.wubydax.romcontrol.v2.prefs.OpenAppPreference
+            android:summary="Choose what app or shortcut to open when TW launcher is being swiped to the magazine page"
+            android:title="Shortcut to GearTWSwipe"
+            android:icon="@mipmap/ic_launcher"
+            app:componentName="com.wubydax.geartwswipe/com.wubydax.geartwswipe.ResetDialogActivity"/>
+
+        <!--Open app preference with only cuctom title and the icon which is loaded from the app-->
+        <com.wubydax.romcontrol.v2.prefs.OpenAppPreference
+            app:componentName="eu.chainfire.supersu/eu.chainfire.supersu.MainActivity-Material"
+            android:title="Chainfire's SuperSu App"
+            android:summary="Manage root permissions for apps and services"/>
+    </PreferenceCategory>
+
+
+
+
+
+
+
+    <!--Running scripts in rom modding is no silly business.
+    We need shell scripts for purposes that can vary from writing a line into a file on sd,
+    through replacing sound files and host files,
+    to as far as replacing entire apk and jar files.
+
+    Because shell scripts can vary in their complexity, we created a special preference that runs shell scripts.
+
+    The major component in this preference is the scriptName attribute. The script name should be given in full,
+    as string, including extension (.sh).
+
+    The code for the preference knows where your scripts are found. It will locate the script if it's found there
+    and execute it.
+
+    if script execution fails, a number is being shown. That means the exit code of a script is not 0.
+    That means something is wrong in the script.
+
+    If the script is executed properly, a toast will be shown saying "Executed successfully"-->
+    <PreferenceCategory
+        android:title="Run script preferences">
+
+        <!--This is the basic script preference. It will jujst run a script.-->
+        <com.wubydax.romcontrol.v2.prefs.RunScriptPreference
+            android:title="Execute script with prompt"
+            app:scriptFileName="simple_test.sh"
+            android:summary="This action will throw warning dialog before executing script"/>
+
+
+        <!--Because of the radical nature of running shall scripts with su,
+        We included a dialog which is shown when a user clicks on script preference
+
+        By default confirm dialog will be shown before executing eny script. If you wish to run a script without the warning dialog,
+        You need to specify the custom attribute that a dialog should not be shown.
+        We strongly encourage you to keep the dialog. It's better for your users to be sure they clicked on the right option-->
+
+        <com.wubydax.romcontrol.v2.prefs.RunScriptPreference
+            android:title="Execute without prompt"
+            app:scriptFileName="simple_test.sh"
+            app:showConfirmDialog="false"
+            android:summary="This action will execute script without warning"/>
+
+        <!--Sometimes you will perform actions in script which will require a device reboot to take effect
+        For this purpose we created a custom attribute app:rebootOptions which can take 3 types of values:
+
+        1. None - this is default. You do not need to specify "none". if you don't specify rebootOptions it will always be "none"
+        This means reboot is not required upon running script
+
+        2. Optional - this means that the execution of this script is ok without immediate reboot,
+        but for the action to take effect, reboot is required. if you set rebootOption to "optional",
+        upon successful script execution a user will be presented with a dialog.
+        A dialog has 2 buttons: reboot now or reboot later.
+        Use this option ONLY if reboot is required for action to take effect and reboot is not VITAL. Meaning no app will FC without reboot.
+
+        3. Imminent - sometimes you will want to run scripts which replace key system components, such as entire apk
+        or even jar files. When a script like that is executed, you want immediate reboot. Because other wise the app in question
+         can throw FC. Most of you from what we have seen, use reboot option for scripts like these at the end of the script.
+         You NO LONGER HAVE TO. We will handle the reboot for you ONLY if the script is executed successfully and "imminent" option was chosen.
+         It is nice to WARN the user that their phone will reboot after running the script.
+         That is why if you choose app:rebootOptions="imminent" a dialog will be shown to the user once they click on preference.
+         This dialog will warn them that upon script execution their device will reboot.-->
+
+
+        <!--Script preference with optional reboot-->
+        <com.wubydax.romcontrol.v2.prefs.RunScriptPreference
+            android:title="Script with optional reboot"
+            app:rebootOptions="optional"
+            app:scriptFileName="simple_test.sh"
+            android:summary="This action will write into a file on sd card and show dialog that reminds the user to reboot their phone at this time or later for the action to take effect"/>
+
+        <!--Script preference with imminent reboot-->
+        <com.wubydax.romcontrol.v2.prefs.RunScriptPreference
+            android:title="Script with imminent reboot"
+            android:summary="This action will run script which has reboot command at the end and warn user that reboot of device will follow the script execution immediately"
+            app:rebootOptions="imminent"
+            app:scriptFileName="simple_test.sh"/>
+
+
+        <!--We were asked by some developers to make a kill app option available for script preference
+        Therefore, you can also use the kill package attributes now, silent or with dialog,
+        for your script preferences.
+
+        The following RunScriptPreference will prompt killing contacts app f.e
+        P.s. you can set icons to your run script preferences like any other preference-->
+        <com.wubydax.romcontrol.v2.prefs.RunScriptPreference
+            android:title="Execute and kill app + icon"
+            android:icon="@mipmap/ic_launcher"
+            android:summary="Upon finishing, this script preference will prompt a user to kill app, since we set the isSilent attribute to false"
+            app:packageNameToKill="com.android.contacts"
+            app:isSilent="false"
+            app:scriptFileName="simple_test.sh"/>
+    </PreferenceCategory>
+
+
+
+
+
+
+
+    <!--Despite for all our efforts to create various preferences,
+    sometimes you might want to just make a regular preference screen to open a webpage
+    This is still possible.
+    The format is in accordance to android documentation.
+
+    You need to declare PreferenceScreen and add intent to it
+    The following 2 preferences show examples of how this can be done-->
+    <PreferenceCategory
+        android:title="Open normal intent preferences">
+        <PreferenceScreen
+            android:title="Open google page"
+            android:icon="@drawable/google_ic"
+            android:summary="Using usual preference screen intent to open a web page">
+            <intent android:action="android.intent.action.VIEW"
+                    android:data="http://www.google.com" />
+        </PreferenceScreen>
+        <PreferenceScreen
+            android:title="Unified TouchWiz guides thread"
+            android:icon="@drawable/td"
+            android:summary="Open the most developed guides thread for TW devices on XDA">
+            <intent android:action="android.intent.action.VIEW"
+                    android:data="http://forum.xda-developers.com/showthread.php?t=2799050" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+
+
+    <!--The following shows how to use nested screen preferences-->
+    <PreferenceCategory
+        android:title="Nested Screen Preferences">
+
+
+        <!--This is the first nested screen - level 1-->
+        <PreferenceScreen
+            android:title="Sub Screen Preferences">
+
+            <!--This is one of those little bonus thingies what we made for our beta-testers
+            and you all get to inherit it. It's a little preference class called ImageHeaderPreference
+            It allows you to choose and image as header for your preference screen.
+            Just to bring a little color and life into all those switches and checkboxes...-->
+            <com.wubydax.romcontrol.v2.prefs.ImageHeaderPreference
+                app:imageSource="@drawable/android"/>
+
+
+            <PreferenceCategory
+                android:title="Sub Test Category">
+                <com.wubydax.romcontrol.v2.prefs.MySwitchPreference
+                    android:defaultValue="true"
+                    android:key="sub_test_switch"
+                    android:summaryOff="Disabled"
+                    android:summaryOn="Enabled"
+                    android:title="Sub Test Switch"/>
+                <com.wubydax.romcontrol.v2.prefs.ColorPickerPreference
+                    android:defaultValue="#ffccdd"
+                    android:key="sub_test_color"
+                    android:title="Sub Test color"/>
+
+                <!--Second nested preference screen - level 2
+                You can go as deep as you need.-->
+                <PreferenceScreen
+                    android:title="Sub Sub Screen Preferences">
+                    <PreferenceCategory
+                        android:title="Sub Sub Test Category">
+                        <com.wubydax.romcontrol.v2.prefs.MySwitchPreference
+                            android:defaultValue="true"
+                            android:key="sub_sub_test_switch"
+                            android:summaryOff="Disabled"
+                            android:summaryOn="Enabled"
+                            android:title="Sub Sub Test Switch"/>
+                        <com.wubydax.romcontrol.v2.prefs.ColorPickerPreference
+                            android:defaultValue="#ffccdd"
+                            android:key="sub_sub_test_color"
+                            android:title="Sub Sub Test color"/>
+                    </PreferenceCategory>
+                </PreferenceScreen>
+            </PreferenceCategory>
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+</PreferenceScreen>

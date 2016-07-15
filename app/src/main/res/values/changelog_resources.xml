@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Do not forget to include this in any locale specific folders for translation-->
+
+    <!--In the following array put your changelog items
+    Take as many lines as you need.
+    Add as many items as you want or delete some if those are too many
+    This order is how they will appear in the dialog
+    Make any order you want from top to bottom-->
+    <string-array name="changelog_items">
+        <item>Some changelog thing lkjh l lkjh slkjh lkjh s,mnb lkjhs lkjh poiuy slkjh</item>
+        <item>Another changelog thing ;lkj d;lkj ;lkjs ;lkj ;lkj s;lkj ;lkj s;lkj ;lkj ;lks ;lkj ;lkj</item>
+        <item>Some more changelog things</item>
+        <item>Some even more changelog thing</item>
+        <item>And another changelog thing ;lsj; lkjs ;lkj ; lkj;lsjk ;sklj s;lkj s;lk js;lkj s;lkj</item>
+        <item>How many changelog things</item>
+        <item>What a long changelog!!!</item>
+        <item>Is it twenty already?</item>
+        <item>Are we there yet?</item>
+        <item>Live long and prosper</item>
+        <item>So say we all</item>
+        <item>Patience you must have</item>
+        <item>Great scot!!!</item>
+        <item>No disassemble…</item>
+        <item>Almost there</item>
+        <item>Done with changelog</item>
+    </string-array>
+
+    <!--This will be the dialog title.
+    Put your own rom version and name.
+    Have fun-->
+    <string name="rom_version_for_changelog">build v1.0 6thgearrom</string>
+
+
+</resources>

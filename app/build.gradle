@@ -1,0 +1,99 @@
+apply plugin: 'com.android.application'
+
+/*      Created by Roberto Mariani and Anna Berkovitch, 2015-2016
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
+
+def keystorePropertiesFile = rootProject.file("key.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+
+android {
+//    signingConfigs {
+//        gearSigningConfig {
+//            keyAlias keystoreProperties['keyAlias']
+//            keyPassword keystoreProperties['keyPassword']
+//            storeFile file(keystoreProperties['storeFile'])
+//            storePassword keystoreProperties['storePassword']
+//        }
+//    }
+    compileSdkVersion 24
+    buildToolsVersion "23.0.3"
+    defaultConfig {
+        applicationId "com.wubydax.romcontrol.v2"
+        minSdkVersion 21
+        //noinspection OldTargetApi
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+        project.archivesBaseName = "RomControl"
+    }
+
+    buildTypes {
+        release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.gearSigningConfig
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    output.outputFile = new File(output.outputFile.parent,
+                            output.outputFile.name.replace("-release", ""))
+                }
+            }
+        }
+    }
+}
+
+task installAndLaunchRelease(type: Exec, dependsOn: 'installRelease') {
+    commandLine 'adb', 'shell', 'am', 'start', '-n', 'com.wubydax.romcontrol.v2/.MainActivity'
+}
+
+task pushToDevice(type: Exec, dependsOn: 'assembleRelease') {
+    commandLine 'adb', 'push', './build/outputs/apk/RomControl.apk', '/sdcard/RomControl.apk'
+}
+
+task mountRW(type: Exec, dependsOn: 'pushToDevice') {
+    commandLine 'adb', 'shell', 'su', '-c', 'mount -o remount,rw /system'
+}
+
+task copyToPrivApp(type: Exec, dependsOn: 'mountRW') {
+    commandLine 'adb', 'shell', 'su', '-c', 'cp /storage/emulated/0/RomControl.apk /system/priv-app/RomControl.apk'
+    finalizedBy('chmodApk')
+}
+
+task chmodApk(type: Exec) {
+    commandLine 'adb', 'shell', 'su', '-c', 'chmod 644 /system/priv-app/RomControl.apk'
+    finalizedBy('mountRO')
+}
+
+task mountRO(type: Exec) {
+    commandLine 'adb', 'shell', 'su', '-c', 'mount -o remount,ro /system'
+    finalizedBy('rebootDevice')
+}
+
+task rebootDevice(type: Exec) {
+    commandLine 'adb', 'reboot'
+}
+
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support:support-v4:24.0.0'
+    compile 'com.android.support:design:24.0.0'
+    compile 'com.android.support:cardview-v7:24.0.0'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile files('libs/RootTools.jar')
+}

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--/*      Created by Roberto Mariani and Anna Berkovitch, 2015-2016
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with this program.  If not, see <http://www.gnu.org/licenses/>.*/-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:wubydax="http://schemas.android.com/apk/res-auto">
+    <com.wubydax.romcontrol.v2.prefs.MySwitchPreference
+        android:defaultValue="false"
+        android:key="enable_gear_custom_bg"
+        android:summaryOff="Disabled"
+        android:summaryOn="Enabled"
+        android:title="Enable custom background"/>
+    <PreferenceCategory
+        android:dependency="enable_gear_custom_bg"
+        android:title="InCallUI bg preferences">
+        <com.wubydax.romcontrol.v2.prefs.MyListPreference
+            android:defaultValue="0"
+            android:dependency="enable_gear_custom_bg"
+            android:entries="@array/custom_bg_type_entries"
+            android:entryValues="@array/custom_bg_type_values"
+            android:key="gear_custom_bg_type"
+            android:title="Background type"/>
+        <com.wubydax.romcontrol.v2.prefs.UriSelectionPreference
+            android:key="incallui_bg"
+            android:title="Select Bg image"/>
+        <com.wubydax.romcontrol.v2.prefs.MyListPreference
+            android:defaultValue="0"
+            android:dependency="enable_gear_custom_bg"
+            android:entries="@array/crop_entries"
+            android:entryValues="@array/crop_values"
+            android:key="gear_bg_crop_type"
+            android:title="Set Image Scaling Type"/>
+        <com.wubydax.romcontrol.v2.prefs.ColorPickerPreference
+            android:defaultValue="#00000000"
+            android:key="gear_bg_primary_color"
+            android:title="Select primary color"/>
+        <com.wubydax.romcontrol.v2.prefs.ColorPickerPreference
+            android:defaultValue="#00000000"
+            android:key="gear_second_gradient_color"
+            android:title="Secondary Color (for gradient)"/>
+        <com.wubydax.romcontrol.v2.prefs.MyListPreference
+            android:defaultValue="0"
+            android:entries="@array/gradient_entries"
+            android:entryValues="@array/gradient_values"
+            android:key="gear_bg_gradient_orientation"
+            android:title="Gradient orientation"/>
+        <com.wubydax.romcontrol.v2.prefs.MySeekBarPreference
+            android:defaultValue="255"
+            android:key="gear_bg_opacity"
+            android:title="Background Opacity"
+            wubydax:maxValue="255"
+            wubydax:minValue="0"/>
+    </PreferenceCategory>
+
+
+</PreferenceScreen>
