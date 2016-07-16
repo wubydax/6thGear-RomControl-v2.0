@@ -91,7 +91,6 @@ public class PrefsFragment extends PreferenceFragment implements Preference.OnPr
     private void iteratePrefs(PreferenceGroup preferenceGroup) {
         for (int i = 0; i < preferenceGroup.getPreferenceCount(); i++) {
             Preference preference = preferenceGroup.getPreference(i);
-            Log.d(LOG_TAG, "iteratePrefs " + preference.getClass().getSimpleName());
             if (preference instanceof PreferenceGroup) {
                 if (preference instanceof PreferenceScreen) {
                     preference.setOnPreferenceClickListener(this);
@@ -101,7 +100,9 @@ public class PrefsFragment extends PreferenceFragment implements Preference.OnPr
                 }
             } else if (preference instanceof OpenAppPreference) {
                 if (!((OpenAppPreference) preference).isInstalled()) {
-                    preferenceGroup.removePreference(preference);
+                    if(preferenceGroup.removePreference(preference)) {
+                        i--;
+                    }
                 }
             } else if (preference instanceof UriSelectionPreference) {
                 ((UriSelectionPreference) preference).setOnUriSelectionRequestedListener(this);
