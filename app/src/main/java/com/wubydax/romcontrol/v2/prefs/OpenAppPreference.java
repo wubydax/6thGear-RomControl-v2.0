@@ -8,8 +8,11 @@ import android.content.pm.ResolveInfo;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.wubydax.romcontrol.v2.MyApp;
 import com.wubydax.romcontrol.v2.R;
@@ -32,11 +35,17 @@ public class OpenAppPreference extends Preference {
     private ResolveInfo mResolveInfo;
     private Context mContext;
     private Intent mIntent;
+    private Drawable mIcon;
+    private String mTitle;
 
 
     public OpenAppPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = MyApp.getContext();
+        String androidNS = "http://schemas.android.com/apk/res/android";
+        int iconId = attrs.getAttributeResourceValue(androidNS, "icon", -1);
+        mIcon = iconId != -1 ? context.getDrawable(iconId) : null;
+        mTitle = attrs.getAttributeValue(androidNS, "title");
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.OpenAppPreference);
         String componentName = typedArray.getString(R.styleable.OpenAppPreference_componentName);
         initPreference(componentName);
@@ -44,6 +53,7 @@ public class OpenAppPreference extends Preference {
     }
 
     private void initPreference(String componentName) {
+
         String[] components = componentName.split("/");
         mIntent = new Intent();
         ComponentName component = new ComponentName(components[0], components[1]);
@@ -53,28 +63,25 @@ public class OpenAppPreference extends Preference {
 
     }
 
-
     @Override
-    protected void onBindView(View view) {
-        super.onBindView(view);
-        if (mResolveInfo != null) {
-            Drawable icon = mResolveInfo.activityInfo.loadIcon(mContext.getPackageManager());
+    protected void onAttachedToHierarchy(PreferenceManager preferenceManager) {
+        super.onAttachedToHierarchy(preferenceManager);
+        if (isInstalled()) {
 
-            if (getIcon() == null) {
+            if (mIcon == null) {
+                Drawable icon = mResolveInfo.activityInfo.loadIcon(mContext.getPackageManager());
                 setIcon(icon);
             }
-            if (getTitle() == null) {
+            if (mTitle == null) {
                 setTitle(mResolveInfo.activityInfo.loadLabel(mContext.getPackageManager()));
             }
         }
     }
 
-
-
     @Override
     protected void onClick() {
         super.onClick();
-        if (mResolveInfo != null) {
+        if (isInstalled()) {
             mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mContext.startActivity(mIntent);
         }
