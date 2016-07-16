@@ -59,8 +59,7 @@
                     android:id="@+id/aboutContactUsContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="3"/>
+                    android:orientation="horizontal"/>
 
                 <TextView
                     android:layout_width="match_parent"
