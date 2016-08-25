@@ -29,10 +29,6 @@
         <item name="android:colorBackground">@color/darkBgColor</item>
     </style>
 
-    <style name="NestedPrefScreenToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
-    </style>
-
     <style name="RebootDialogTheme" parent="android:Theme.Material.Light.DarkActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFrame">@null</item>

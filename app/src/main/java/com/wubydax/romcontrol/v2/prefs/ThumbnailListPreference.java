@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.DialogPreference;
 import android.preference.Preference;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,7 @@ public class ThumbnailListPreference extends DialogPreference implements Adapter
     private final String mPackageToKill;
     private final boolean mIsSilent;
     private final boolean mIsRebootRequired;
+    private final String mReverseDependencyKey;
     private Context mContext;
     private Drawable[] mThumbnailsArray;
     private CharSequence[] mEntriesList, mEntryValuesList;
@@ -63,6 +65,7 @@ public class ThumbnailListPreference extends DialogPreference implements Adapter
         mPackageToKill = generalTypedArray.getString(R.styleable.Preference_packageNameToKill);
         mIsSilent = generalTypedArray.getBoolean(R.styleable.Preference_isSilent, true);
         mDependentValue = generalTypedArray.getString(R.styleable.Preference_dependentValue);
+        mReverseDependencyKey = generalTypedArray.getString(R.styleable.Preference_reverseDependency);
         int resId = typedArray.getResourceId(R.styleable.ThumbnailListPreference_drawableArray, 0);
         if (resId != 0) {
             TypedArray resourceArray = context.getResources().obtainTypedArray(resId);
@@ -79,6 +82,19 @@ public class ThumbnailListPreference extends DialogPreference implements Adapter
         setWidgetLayoutResource(R.layout.thumbnail_preference_icon);
 
     }
+
+    @Override
+    protected void onAttachedToActivity() {
+        super.onAttachedToActivity();
+        if (!TextUtils.isEmpty(mReverseDependencyKey)) {
+            Preference preference = findPreferenceInHierarchy(mReverseDependencyKey);
+            if (preference != null && (preference instanceof MySwitchPreference || preference instanceof MyCheckBoxPreference)) {
+                ReverseDependencyMonitor reverseDependencyMonitor = (ReverseDependencyMonitor) preference;
+                reverseDependencyMonitor.registerReverseDependencyPreference(this);
+            }
+        }
+    }
+
 
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {

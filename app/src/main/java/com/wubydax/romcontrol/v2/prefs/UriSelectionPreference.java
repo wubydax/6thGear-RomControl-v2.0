@@ -2,14 +2,17 @@ package com.wubydax.romcontrol.v2.prefs;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 
+import com.wubydax.romcontrol.v2.R;
 import com.wubydax.romcontrol.v2.utils.Utils;
 
 /*      Created by Roberto Mariani and Anna Berkovitch, 30/06/2016
@@ -31,11 +34,15 @@ public class UriSelectionPreference extends Preference {
 
     private OnUriSelectionRequestedListener mOnUriSelectionRequestedListener;
     private ContentResolver mContentResolver;
+    private String mReverseDependencyKey;
 
 
     public UriSelectionPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContentResolver = context.getContentResolver();
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.Preference);
+        mReverseDependencyKey = typedArray.getString(R.styleable.Preference_reverseDependency);
+        typedArray.recycle();
     }
 
     public OnUriSelectionRequestedListener getOnUriSelectionRequestedListener() {
@@ -44,6 +51,18 @@ public class UriSelectionPreference extends Preference {
 
     public void setOnUriSelectionRequestedListener(OnUriSelectionRequestedListener onUriSelectionRequestedListener) {
         mOnUriSelectionRequestedListener = onUriSelectionRequestedListener;
+    }
+
+    @Override
+    protected void onAttachedToActivity() {
+        super.onAttachedToActivity();
+        if (!TextUtils.isEmpty(mReverseDependencyKey)) {
+            Preference preference = findPreferenceInHierarchy(mReverseDependencyKey);
+            if (preference != null && (preference instanceof MySwitchPreference || preference instanceof MyCheckBoxPreference)) {
+                ReverseDependencyMonitor reverseDependencyMonitor = (ReverseDependencyMonitor) preference;
+                reverseDependencyMonitor.registerReverseDependencyPreference(this);
+            }
+        }
     }
 
     @Override

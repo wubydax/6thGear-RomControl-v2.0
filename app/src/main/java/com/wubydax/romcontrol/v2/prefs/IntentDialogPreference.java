@@ -12,8 +12,10 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.DialogPreference;
+import android.preference.Preference;
 import android.provider.Settings;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -61,6 +63,7 @@ public class IntentDialogPreference extends DialogPreference implements AdapterV
     private final String mPackageToKill;
     private final boolean mIsSilent;
     private final boolean mIsRebootRequired;
+    private final String mReverseDependencyKey;
     private boolean mIsSearch, mIsInitialSetup;
     private Context mContext;
     private ListView mListView;
@@ -82,11 +85,25 @@ public class IntentDialogPreference extends DialogPreference implements AdapterV
         mIsRebootRequired = generalTypedArray.getBoolean(R.styleable.Preference_rebootDevice, false);
         mPackageToKill = generalTypedArray.getString(R.styleable.Preference_packageNameToKill);
         mIsSilent = generalTypedArray.getBoolean(R.styleable.Preference_isSilent, true);
+        mReverseDependencyKey = generalTypedArray.getString(R.styleable.Preference_reverseDependency);
+
         typedArray.recycle();
         generalTypedArray.recycle();
 
         setDialogLayoutResource(R.layout.intent_dialog_layout);
         setWidgetLayoutResource(R.layout.intent_preference_app_icon);
+    }
+
+    @Override
+    protected void onAttachedToActivity() {
+        super.onAttachedToActivity();
+        if (!TextUtils.isEmpty(mReverseDependencyKey)) {
+            Preference preference = findPreferenceInHierarchy(mReverseDependencyKey);
+            if (preference != null && (preference instanceof MySwitchPreference || preference instanceof MyCheckBoxPreference)) {
+                ReverseDependencyMonitor reverseDependencyMonitor = (ReverseDependencyMonitor) preference;
+                reverseDependencyMonitor.registerReverseDependencyPreference(this);
+            }
+        }
     }
 
 

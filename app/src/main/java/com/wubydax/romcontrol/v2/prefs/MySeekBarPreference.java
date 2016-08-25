@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.Preference;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -41,6 +42,7 @@ public class MySeekBarPreference extends Preference implements SeekBar.OnSeekBar
     private String mUnitValue, mFormat = "%d%s";
     private TextView mValueText;
     private ContentResolver mContentResolver;
+    private String mReverseDependencyKey;
 
 
     public MySeekBarPreference(Context context, AttributeSet attrs) {
@@ -53,6 +55,7 @@ public class MySeekBarPreference extends Preference implements SeekBar.OnSeekBar
         mIsRebootRequired = generalTypedArray.getBoolean(R.styleable.Preference_rebootDevice, false);
         mPackageToKill = generalTypedArray.getString(R.styleable.Preference_packageNameToKill);
         mIsSilent = generalTypedArray.getBoolean(R.styleable.Preference_isSilent, true);
+        mReverseDependencyKey = generalTypedArray.getString(R.styleable.Preference_reverseDependency);
         mDefaultValue = mMaxValue / 2;
         mUnitValue = typedArray.getString(R.styleable.MySeekBarPreference_unitsValue);
         if (mUnitValue == null) {
@@ -61,6 +64,18 @@ public class MySeekBarPreference extends Preference implements SeekBar.OnSeekBar
         typedArray.recycle();
         generalTypedArray.recycle();
         setWidgetLayoutResource(R.layout.seekbar_preference_layout);
+    }
+
+    @Override
+    protected void onAttachedToActivity() {
+        super.onAttachedToActivity();
+        if (!TextUtils.isEmpty(mReverseDependencyKey)) {
+            Preference preference = findPreferenceInHierarchy(mReverseDependencyKey);
+            if (preference != null && (preference instanceof MySwitchPreference || preference instanceof MyCheckBoxPreference)) {
+                ReverseDependencyMonitor reverseDependencyMonitor = (ReverseDependencyMonitor) preference;
+                reverseDependencyMonitor.registerReverseDependencyPreference(this);
+            }
+        }
     }
 
     @Override

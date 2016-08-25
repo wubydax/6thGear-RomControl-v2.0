@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.os.PowerManager;
 import android.preference.Preference;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ import java.util.concurrent.TimeoutException;
 public class RunScriptPreference extends Preference {
     private final String mPackageToKill;
     private final boolean mIsSilent;
+    private final String mReverseDependencyKey;
     private String mFilePath;
     private boolean mIsConfirmRequired;
     private  int mRebootType;
@@ -51,6 +53,7 @@ public class RunScriptPreference extends Preference {
         TypedArray generalTypedArray = context.obtainStyledAttributes(attrs, R.styleable.Preference);
         mPackageToKill = generalTypedArray.getString(R.styleable.Preference_packageNameToKill);
         mIsSilent = generalTypedArray.getBoolean(R.styleable.Preference_isSilent, true);
+        mReverseDependencyKey = generalTypedArray.getString(R.styleable.Preference_reverseDependency);
         if(typedArray.hasValue(R.styleable.RunScriptPreference_rebootOptions)) {
             mRebootType = typedArray.getInt(R.styleable.RunScriptPreference_rebootOptions, 0);
             if(mRebootType == 2) {
@@ -59,6 +62,18 @@ public class RunScriptPreference extends Preference {
         }
         typedArray.recycle();
         generalTypedArray.recycle();
+    }
+
+    @Override
+    protected void onAttachedToActivity() {
+        super.onAttachedToActivity();
+        if (!TextUtils.isEmpty(mReverseDependencyKey)) {
+            Preference preference = findPreferenceInHierarchy(mReverseDependencyKey);
+            if (preference != null && (preference instanceof MySwitchPreference || preference instanceof MyCheckBoxPreference)) {
+                ReverseDependencyMonitor reverseDependencyMonitor = (ReverseDependencyMonitor) preference;
+                reverseDependencyMonitor.registerReverseDependencyPreference(this);
+            }
+        }
     }
 
     @Override

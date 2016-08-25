@@ -1,12 +1,14 @@
 package com.wubydax.romcontrol.v2.utils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -150,7 +152,7 @@ public class MyDialogFragment extends DialogFragment implements View.OnClickList
         String[] singleChoiceItems = getActivity().getResources().getStringArray(R.array.backup_restore_items);
         Drawable icon = getActivity().getResources().getDrawable(R.drawable.ic_backup_restore);
         assert icon != null;
-        icon.setTint(getActivity().getResources().getColor(R.color.colorAccent));
+        icon.setColorFilter(getActivity().getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_ATOP);
         return new AlertDialog.Builder(getActivity())
                 .setIcon(icon)
                 .setTitle(R.string.backup_restore_dialog_title)
@@ -249,6 +251,12 @@ public class MyDialogFragment extends DialogFragment implements View.OnClickList
     public void onAttach(Context context) {
         super.onAttach(context);
         mOnDialogFragmentListener = (OnDialogFragmentListener) context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mOnDialogFragmentListener = (OnDialogFragmentListener) activity;
     }
 
     @Override

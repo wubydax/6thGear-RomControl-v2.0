@@ -63,7 +63,7 @@ public class ColorPickerDialog
         if (getContext().getResources().getConfiguration().orientation != mOrientation) {
             final int oldcolor = mOldColor.getColor();
             final int newcolor = mNewColor.getColor();
-            mLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+            mLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             setUp(oldcolor);
             mNewColor.setColor(newcolor);
             mColorPicker.setColor(newcolor);

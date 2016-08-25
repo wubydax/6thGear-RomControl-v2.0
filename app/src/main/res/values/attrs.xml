@@ -13,16 +13,23 @@
         You should have received a copy of the GNU General Public License
         along with this program.  If not, see <http://www.gnu.org/licenses/>.*/-->
 <resources>
+    <attr name="navDrawerColorSelector" format="color|reference"/>
     <declare-styleable name="ThumbnailListPreference">
         <attr name="drawableArray" format="reference"/>
         <attr name="entryList" format="reference"/>
         <attr name="entryValuesList" format="reference"/>
+    </declare-styleable>
+    <declare-styleable name="GlobalRestorePreference">
+        <attr name="titlesList" format="reference"/>
+        <attr name="keysList" format="reference"/>
+        <attr name="valuesList" format="reference"/>
     </declare-styleable>
     <declare-styleable name="Preference">
         <attr name="packageNameToKill" format="string"/>
         <attr name="isSilent" format="boolean"/>
         <attr name="rebootDevice" format="boolean"/>
         <attr name="dependentValue" format="string"/>
+        <attr name="reverseDependency" format="string"/>
     </declare-styleable>
     <declare-styleable name="MySeekBarPreference">
         <attr name="minValue" format="integer"/>

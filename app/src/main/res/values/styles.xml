@@ -21,6 +21,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:dialogTheme">@style/DialogTheme</item>
         <item name="android:alertDialogTheme">@style/DialogTheme</item>
+        <item name="navDrawerColorSelector">@color/nav_items_selector_light</item>
     </style>
 
     <style name="AppThemeDark" parent="Theme.AppCompat">
@@ -31,6 +32,7 @@
         <item name="android:colorBackground">@color/darkBgColor</item>
         <item name="android:alertDialogTheme">@style/DialogTheme</item>
         <item name="android:dialogTheme">@style/DialogTheme</item>
+        <item name="navDrawerColorSelector">@color/nav_items_selector_dark</item>
 
     </style>
 
@@ -48,14 +50,11 @@
     <style name="DialogTheme">
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowBackground">@drawable/dialog_bg_main</item>
         <item name="android:windowNoTitle">false</item>
         <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
         <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
-
-
+        <item name="android:windowBackground">@drawable/dialog_bg_main</item>
     </style>
-
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 

@@ -9,6 +9,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import com.wubydax.romcontrol.v2.R;
         along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
 public class OpenAppPreference extends Preference {
+    private final String mReverseDependencyKey;
     private ResolveInfo mResolveInfo;
     private Context mContext;
     private Intent mIntent;
@@ -48,6 +50,9 @@ public class OpenAppPreference extends Preference {
         mTitle = attrs.getAttributeValue(androidNS, "title");
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.OpenAppPreference);
         String componentName = typedArray.getString(R.styleable.OpenAppPreference_componentName);
+        TypedArray generalTypedArray = context.obtainStyledAttributes(attrs, R.styleable.Preference);
+        mReverseDependencyKey = generalTypedArray.getString(R.styleable.Preference_reverseDependency);
+        generalTypedArray.recycle();
         initPreference(componentName);
         typedArray.recycle();
     }
@@ -61,6 +66,18 @@ public class OpenAppPreference extends Preference {
         PackageManager packageManager = mContext.getPackageManager();
         mResolveInfo = packageManager.resolveActivity(mIntent, 0);
 
+    }
+
+    @Override
+    protected void onAttachedToActivity() {
+        super.onAttachedToActivity();
+        if (!TextUtils.isEmpty(mReverseDependencyKey)) {
+            Preference preference = findPreferenceInHierarchy(mReverseDependencyKey);
+            if (preference != null && (preference instanceof MySwitchPreference || preference instanceof MyCheckBoxPreference)) {
+                ReverseDependencyMonitor reverseDependencyMonitor = (ReverseDependencyMonitor) preference;
+                reverseDependencyMonitor.registerReverseDependencyPreference(this);
+            }
+        }
     }
 
     @Override

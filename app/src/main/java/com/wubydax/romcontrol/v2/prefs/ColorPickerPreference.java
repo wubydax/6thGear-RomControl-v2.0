@@ -28,6 +28,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.Preference;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -61,6 +62,7 @@ public class ColorPickerPreference
     private boolean mAlphaSliderEnabled;
     private boolean mHexValueEnabled;
     private boolean mIsInitialSetup;
+    private String mReverseDependencyKey;
 
 
     public ColorPickerPreference(Context context, AttributeSet attrs) {
@@ -70,6 +72,7 @@ public class ColorPickerPreference
         mPackageToKill = typedArray.getString(R.styleable.Preference_packageNameToKill);
         mIsSilent = typedArray.getBoolean(R.styleable.Preference_isSilent, true);
         mIsRebootRequired = typedArray.getBoolean(R.styleable.Preference_rebootDevice, false);
+        mReverseDependencyKey = typedArray.getString(R.styleable.Preference_reverseDependency);
         typedArray.recycle();
     }
 
@@ -148,17 +151,15 @@ public class ColorPickerPreference
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
         int colorInt;
-        try {
-            colorInt = Settings.System.getInt(getContext().getContentResolver(), getKey());
-        } catch (Settings.SettingNotFoundException e) {
-            String mHexDefaultValue = a.getString(index);
-            if (mHexDefaultValue != null && mHexDefaultValue.startsWith("#")) {
-                colorInt = convertToColorInt(mHexDefaultValue);
-            } else {
-                colorInt = a.getColor(index, Color.WHITE);
-            }
 
+        String mHexDefaultValue = a.getString(index);
+        if (mHexDefaultValue != null && mHexDefaultValue.startsWith("#")) {
+            colorInt = convertToColorInt(mHexDefaultValue);
+        } else {
+            colorInt = a.getColor(index, Color.WHITE);
         }
+
+
         return colorInt;
     }
 
@@ -190,6 +191,18 @@ public class ColorPickerPreference
         super.onBindView(view);
         mView = view;
         setPreviewColor();
+    }
+
+    @Override
+    protected void onAttachedToActivity() {
+        super.onAttachedToActivity();
+        if (!TextUtils.isEmpty(mReverseDependencyKey)) {
+            Preference preference = findPreferenceInHierarchy(mReverseDependencyKey);
+            if (preference != null && (preference instanceof MySwitchPreference || preference instanceof MyCheckBoxPreference)) {
+                ReverseDependencyMonitor reverseDependencyMonitor = (ReverseDependencyMonitor) preference;
+                reverseDependencyMonitor.registerReverseDependencyPreference(this);
+            }
+        }
     }
 
     private void setPreviewColor() {
@@ -258,12 +271,7 @@ public class ColorPickerPreference
         Settings.System.putInt(getContext().getContentResolver(), getKey(), color);
         mValue = color;
         setPreviewColor();
-        try {
-            getOnPreferenceChangeListener().onPreferenceChange(this, color);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-        if(!mIsInitialSetup) {
+        if (!mIsInitialSetup) {
             if (mIsRebootRequired) {
                 Utils.showRebootRequiredDialog(getContext());
             } else {
@@ -305,6 +313,7 @@ public class ColorPickerPreference
             mDialog.onRestoreInstanceState(state);
         }
         // added by Anna Berkovitch on 16/06/2015 to set dialog bg according to theme
+        assert mDialog.getWindow() != null;
         mDialog.getWindow().setBackgroundDrawableResource(R.drawable.inset_dialog_bg);
         mDialog.show();
 

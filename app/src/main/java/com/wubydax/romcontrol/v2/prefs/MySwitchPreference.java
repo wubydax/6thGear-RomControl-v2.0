@@ -4,12 +4,17 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.Preference;
+import android.preference.PreferenceGroup;
 import android.preference.SwitchPreference;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.wubydax.romcontrol.v2.R;
 import com.wubydax.romcontrol.v2.utils.Utils;
+
+import java.util.ArrayList;
 
 /*      Created by Roberto Mariani and Anna Berkovitch, 13/06/2016
         This program is free software: you can redistribute it and/or modify
@@ -25,10 +30,13 @@ import com.wubydax.romcontrol.v2.utils.Utils;
         You should have received a copy of the GNU General Public License
         along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 
-public class MySwitchPreference extends SwitchPreference implements Preference.OnPreferenceChangeListener {
+public class MySwitchPreference extends SwitchPreference implements Preference.OnPreferenceChangeListener,
+        ReverseDependencyMonitor {
     private ContentResolver mContentResolver;
     private String mPackageToKill;
     private boolean mIsSilent, mIsRebootRequired;
+    private ArrayList<Preference> mReverseDependents;
+    private String mReverseDependencyKey;
 
     public MySwitchPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -36,9 +44,22 @@ public class MySwitchPreference extends SwitchPreference implements Preference.O
         mPackageToKill = typedArray.getString(R.styleable.Preference_packageNameToKill);
         mIsSilent = typedArray.getBoolean(R.styleable.Preference_isSilent, true);
         mIsRebootRequired = typedArray.getBoolean(R.styleable.Preference_rebootDevice, false);
+        mReverseDependencyKey = typedArray.getString(R.styleable.Preference_reverseDependency);
         typedArray.recycle();
         mContentResolver = context.getContentResolver();
         setOnPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onAttachedToActivity() {
+        super.onAttachedToActivity();
+        if (!TextUtils.isEmpty(mReverseDependencyKey)) {
+            Preference preference = findPreferenceInHierarchy(mReverseDependencyKey);
+            if (preference != null && (preference instanceof MySwitchPreference || preference instanceof MyCheckBoxPreference)) {
+                ReverseDependencyMonitor reverseDependencyMonitor = (ReverseDependencyMonitor) preference;
+                reverseDependencyMonitor.registerReverseDependencyPreference(this);
+            }
+        }
     }
 
     @Override
@@ -58,7 +79,6 @@ public class MySwitchPreference extends SwitchPreference implements Preference.O
     }
 
 
-
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean isTrue = (boolean) newValue;
@@ -68,7 +88,7 @@ public class MySwitchPreference extends SwitchPreference implements Preference.O
             Utils.showRebootRequiredDialog(getContext());
         } else {
             if (mPackageToKill != null) {
-                if(Utils.isPackageInstalled(mPackageToKill)) {
+                if (Utils.isPackageInstalled(mPackageToKill)) {
                     if (mIsSilent) {
                         Utils.killPackage(mPackageToKill);
                     } else {
@@ -78,7 +98,26 @@ public class MySwitchPreference extends SwitchPreference implements Preference.O
             }
         }
 
+        if (mReverseDependents != null && mReverseDependents.size() > 0) {
+            for (Preference pref : mReverseDependents) {
+                pref.setEnabled(!isTrue);
+            }
+        }
+
         return true;
     }
 
+
+    @Override
+    public void registerReverseDependencyPreference(Preference preference) {
+        if (mReverseDependents == null) {
+            mReverseDependents = new ArrayList<>();
+        }
+        if (preference != null && !mReverseDependents.contains(preference)) {
+            mReverseDependents.add(preference);
+            preference.setEnabled(!isChecked());
+            Log.d("daxgirl", "registerReverseDependencyPreference preference is " + preference.getClass().getSimpleName());
+        }
+
+    }
 }

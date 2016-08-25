@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.wubydax.romcontrol.v2.R;
@@ -33,6 +34,7 @@ public class FilePreference extends SwitchPreference implements Preference.OnPre
     private final boolean mIsSilent;
     private final boolean mIsRebootRequired;
     private File mFile;
+    private String mReverseDependencyKey;
 
     public FilePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -40,8 +42,21 @@ public class FilePreference extends SwitchPreference implements Preference.OnPre
         mPackageToKill = typedArray.getString(R.styleable.Preference_packageNameToKill);
         mIsSilent = typedArray.getBoolean(R.styleable.Preference_isSilent, true);
         mIsRebootRequired = typedArray.getBoolean(R.styleable.Preference_rebootDevice, false);
+        mReverseDependencyKey = typedArray.getString(R.styleable.Preference_reverseDependency);
         typedArray.recycle();
         setOnPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onAttachedToActivity() {
+        super.onAttachedToActivity();
+        if (!TextUtils.isEmpty(mReverseDependencyKey)) {
+            Preference preference = findPreferenceInHierarchy(mReverseDependencyKey);
+            if (preference != null && (preference instanceof MySwitchPreference || preference instanceof MyCheckBoxPreference)) {
+                ReverseDependencyMonitor reverseDependencyMonitor = (ReverseDependencyMonitor) preference;
+                reverseDependencyMonitor.registerReverseDependencyPreference(this);
+            }
+        }
     }
 
     @Override

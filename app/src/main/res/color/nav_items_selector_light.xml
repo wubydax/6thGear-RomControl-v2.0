@@ -13,6 +13,6 @@
         You should have received a copy of the GNU General Public License
         along with this program.  If not, see <http://www.gnu.org/licenses/>.*/-->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="?android:attr/colorAccent" android:state_checked="true"/>
-    <item android:color="?android:attr/textColorSecondary"/>
+    <item android:color="@color/colorAccent" android:state_checked="true"/>
+    <item android:color="#af000000"/>
 </selector>

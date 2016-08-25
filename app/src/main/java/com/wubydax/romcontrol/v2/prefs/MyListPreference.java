@@ -7,6 +7,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.wubydax.romcontrol.v2.R;
@@ -32,6 +33,7 @@ public class MyListPreference extends ListPreference implements Preference.OnPre
     private final String mPackageToKill, mDependentValue;
     private final boolean mIsSilent;
     private final boolean mIsRebootRequired;
+    private final String mReverseDependencyKey;
     private ContentResolver mContentResolver;
     private List<CharSequence> mEntries, mValues;
 
@@ -46,14 +48,21 @@ public class MyListPreference extends ListPreference implements Preference.OnPre
         mIsSilent = typedArray.getBoolean(R.styleable.Preference_isSilent, true);
         mIsRebootRequired = typedArray.getBoolean(R.styleable.Preference_rebootDevice, false);
         mDependentValue = typedArray.getString(R.styleable.Preference_dependentValue);
+        mReverseDependencyKey = typedArray.getString(R.styleable.Preference_reverseDependency);
         typedArray.recycle();
         setOnPreferenceChangeListener(this);
     }
 
     @Override
-    protected void onAttachedToHierarchy(PreferenceManager preferenceManager) {
-        super.onAttachedToHierarchy(preferenceManager);
-
+    protected void onAttachedToActivity() {
+        super.onAttachedToActivity();
+        if (!TextUtils.isEmpty(mReverseDependencyKey)) {
+            Preference preference = findPreferenceInHierarchy(mReverseDependencyKey);
+            if (preference != null && (preference instanceof MySwitchPreference || preference instanceof MyCheckBoxPreference)) {
+                ReverseDependencyMonitor reverseDependencyMonitor = (ReverseDependencyMonitor) preference;
+                reverseDependencyMonitor.registerReverseDependencyPreference(this);
+            }
+        }
     }
 
     @Override
