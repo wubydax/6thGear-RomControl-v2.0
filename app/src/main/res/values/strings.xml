@@ -62,6 +62,7 @@
     <string name="reboot_later_negative_button">later</string>
     <string name="reboot_now_dialog_button">reboot now</string>
     <string name="imminent_reboot_warning">Your device will reboot IMMEDIATELY upon script completion!!!</string>
+    <string name="restore_dialog_description">This action will restore the following items to stock colors</string>
 
     <!--These strings are to set the default fragment to open for the first time the app launches-->
 </resources>
