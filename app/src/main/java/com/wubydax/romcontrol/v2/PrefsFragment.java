@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -16,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.wubydax.romcontrol.v2.prefs.OpenAppPreference;
@@ -125,7 +127,11 @@ public class PrefsFragment extends PreferenceFragment implements Preference.OnPr
     private void setUpNestedPreferenceLayout(PreferenceScreen preference) {
         final Dialog dialog = preference.getDialog();
         if (dialog != null) {
-            LinearLayout rootView = (LinearLayout) dialog.findViewById(android.R.id.list).getParent();
+            ViewGroup rootView = (ViewGroup) dialog.findViewById(android.R.id.list).getParent();
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.M ) {
+                rootView = (ViewGroup) rootView.getParent();
+            }
+            assert dialog.getWindow() != null;
             View decorView = dialog.getWindow().getDecorView();
             if (decorView != null && rootView != null) {
                 Toolbar toolbar = (Toolbar) LayoutInflater.from(getActivity()).inflate(R.layout.nested_preference_toolbar_layout, rootView, false);

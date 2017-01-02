@@ -95,6 +95,20 @@ public class IntentDialogPreference extends DialogPreference implements AdapterV
     }
 
     @Override
+    protected Object onGetDefaultValue(TypedArray a, int index) {
+        return a.getString(index);
+    }
+
+    @Override
+    protected void onBindView(View view) {
+        super.onBindView(view);
+        String value = getPersistedString(null);
+        ImageView prefAppIcon = (ImageView) view.findViewById(R.id.iconForApp);
+        prefAppIcon.setImageDrawable(getAppIcon(value));
+        setSummary(value != null && value.split(mSeparator).length == 2 ? getAppName(value) : "");
+    }
+
+    @Override
     protected void onAttachedToActivity() {
         super.onAttachedToActivity();
         if (!TextUtils.isEmpty(mReverseDependencyKey)) {
@@ -106,14 +120,53 @@ public class IntentDialogPreference extends DialogPreference implements AdapterV
         }
     }
 
+    @Override
+    protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
+        mIsInitialSetup = true;
+        String value = Settings.System.getString(getContext().getContentResolver(), getKey());
+        if (value == null) {
+            if (defaultValue != null && ((String) defaultValue).split(mSeparator).length == 2) {
+                value = (String) defaultValue;
+                Settings.System.putString(getContext().getContentResolver(), getKey(), value);
+            }
+        }
+        if (value != null) {
+            persistString(value);
+        }
+    }
 
     @Override
-    protected void onBindView(View view) {
-        super.onBindView(view);
-        String value = getPersistedString(null);
-        ImageView prefAppIcon = (ImageView) view.findViewById(R.id.iconForApp);
-        prefAppIcon.setImageDrawable(getAppIcon(value));
-        setSummary(value != null && value.split(mSeparator).length == 2 ? getAppName(value) : "");
+    protected boolean persistString(String value) {
+        if (getKey() != null) {
+            Settings.System.putString(getContext().getContentResolver(), getKey(), value);
+
+            if (mIsRebootRequired && !mIsInitialSetup) {
+                Utils.showRebootRequiredDialog(getContext());
+            } else {
+                if (mPackageToKill != null && !mIsInitialSetup) {
+                    if (Utils.isPackageInstalled(mPackageToKill)) {
+                        if (mIsSilent) {
+                            Utils.killPackage(mPackageToKill);
+                        } else {
+                            Utils.showKillPackageDialog(mPackageToKill, getContext());
+                        }
+                    }
+                }
+            }
+        }
+        mIsInitialSetup = false;
+        return super.persistString(value);
+    }
+
+    @Override
+    protected void showDialog(Bundle state) {
+        super.showDialog(state);
+        AlertDialog dialog = (AlertDialog) getDialog();
+        assert dialog.getWindow() != null;
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        dialog.show();
+        Button ok = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        ok.setVisibility(View.GONE);
     }
 
     @Override
@@ -163,38 +216,6 @@ public class IntentDialogPreference extends DialogPreference implements AdapterV
         }
     }
 
-    @Override
-    protected Object onGetDefaultValue(TypedArray a, int index) {
-        return a.getString(index);
-    }
-
-    @Override
-    protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
-        mIsInitialSetup = true;
-        String value = Settings.System.getString(getContext().getContentResolver(), getKey());
-        if (value == null) {
-            if (defaultValue != null && ((String) defaultValue).split(mSeparator).length == 2) {
-                value = (String) defaultValue;
-                Settings.System.putString(getContext().getContentResolver(), getKey(), value);
-            }
-        }
-        if (value != null) {
-            persistString(value);
-        }
-    }
-
-
-    @Override
-    protected void showDialog(Bundle state) {
-        super.showDialog(state);
-        AlertDialog dialog = (AlertDialog) getDialog();
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        dialog.show();
-        Button ok = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        ok.setVisibility(View.GONE);
-    }
-
-
     private String getAppName(String value) {
         String appName = null;
         if (value != null) {
@@ -212,7 +233,6 @@ public class IntentDialogPreference extends DialogPreference implements AdapterV
 
         return appName;
     }
-
 
     private Drawable getAppIcon(String intentString) {
         Drawable appIcon = mContext.getResources().getDrawable(R.mipmap.ic_launcher);
@@ -241,29 +261,6 @@ public class IntentDialogPreference extends DialogPreference implements AdapterV
         persistString(intentString);
         getDialog().dismiss();
 
-    }
-
-    @Override
-    protected boolean persistString(String value) {
-        if (getKey() != null) {
-            Settings.System.putString(getContext().getContentResolver(), getKey(), value);
-
-            if (mIsRebootRequired && !mIsInitialSetup) {
-                Utils.showRebootRequiredDialog(getContext());
-            } else {
-                if (mPackageToKill != null && !mIsInitialSetup) {
-                    if (Utils.isPackageInstalled(mPackageToKill)) {
-                        if (mIsSilent) {
-                            Utils.killPackage(mPackageToKill);
-                        } else {
-                            Utils.showKillPackageDialog(mPackageToKill, getContext());
-                        }
-                    }
-                }
-            }
-        }
-        mIsInitialSetup = false;
-        return super.persistString(value);
     }
 
     private void createList() {

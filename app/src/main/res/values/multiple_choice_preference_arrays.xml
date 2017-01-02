@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="test_pref_titles">
+        <item>Test pref 1</item>
+        <item>Test pref 2</item>
+        <item>Test pref 3</item>
+        <item>Test pref 4</item>
+        <item>Test pref 5</item>
+    </string-array>
+
+    <string-array name="test_pref_summaries">
+        <item>Summary for test pref 1</item>
+        <item>Summary for test pref 2</item>
+        <item>Summary for test pref 3</item>
+        <item>Summary for test pref 4</item>
+        <item>Summary for test pref 5</item>
+    </string-array>
+
+    <string-array name="test_pref_keys">
+        <item>test1</item>
+        <item>test2</item>
+        <item>test3</item>
+        <item>test4</item>
+        <item>test5</item>
+    </string-array>
+
+    <integer-array name="test_pref_defaults">
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+    </integer-array>
+</resources>

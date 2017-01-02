@@ -59,4 +59,15 @@
         <attr name="rebootText" format="string"/>
         <attr name="rebootColor" format="color"/>
     </declare-styleable>
+    <declare-styleable name="MultipleChoicePreference">
+        <attr name="multipleChoiceTitles" format="reference"/>
+        <attr name="multipleChoiceKeys" format="reference"/>
+        <attr name="multipleChoiceSummaries" format="reference"/>
+        <attr name="multipleChoiceDefaults" format="reference"/>
+        <attr name="showSelectAll" format="boolean"/>
+        <attr name="choiceSelector">
+            <enum name="checkbox_selector" value="0"/>
+            <enum name="switch_selector" value="1"/>
+        </attr>
+    </declare-styleable>
 </resources>
